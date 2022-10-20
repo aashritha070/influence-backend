@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
 
-const UserDetails=new mongoose.Schema({
-    username:{
+const UserDetails = new mongoose.Schema({
+    firstName:{
         type:String,
         required:true,
-        unique:true
+        unique:false
     },
-    email:{
+    lastName:{
+        type:String,
+        required:true,
+        unique:false
+    },
+    emailId:{
         type:String,
         required:true,
         unique:true
@@ -19,4 +24,4 @@ const UserDetails=new mongoose.Schema({
 {timestamps: true}
 );
 
-module.exports = mongoose.model("UserDetails",UserDetails)
+module.exports = mongoose.model("UserDetails", UserDetails)

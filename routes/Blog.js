@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const UserDetails = require('../models/UserDetails');
 const Blog = require('../models/Blog');
-// const count =0;
+
 router.post('/', async (req, res) => {
    const newBlog = new Blog(req.body);
    try{
@@ -59,8 +59,6 @@ router.delete("/:id", async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
       const blog = await Blog.findById(req.params.id);
-      // count=count+1;
-      // console.log(count)
       res.status(200).json(blog);
     } catch (err) {
       res.status(500).json(err);
@@ -74,7 +72,7 @@ router.get("/", async (req, res) => {
     try {
       let blogs;
       if (username) {
-        blogs = await Blog.find({ username }).sort({updatedAt:"desc"});
+        blogs = await Blog.find({ username }).sort({createdAt:"desc"});
         
       } else if (Tag) {
         blogs = await Blog.find({
@@ -83,7 +81,7 @@ router.get("/", async (req, res) => {
           },
         }).sort({createdAt:"desc"});
       } else {
-        blogs = await Blog.find().sort({updatedAt:"desc"});
+        blogs = await Blog.find().sort({createdAt:"desc"});
       }
       // console.log(blogs)
       res.status(200).json(blogs);
