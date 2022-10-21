@@ -54,6 +54,6 @@ app.use('/ExistingUser', existingUser);
 app.use('/posts', Blog);
 app.use('/Tag', tag);
 
-app.listen(5000, () => {
-  console.log('server listening on PORT', 5000);
+app.listen(process.env.PORT || 5000,function () {
+  console.log('server listening on PORT', this.address().port);
 });
