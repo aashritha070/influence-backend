@@ -8,7 +8,7 @@ const signupController = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   try {
     // Get user input
-    const { firstName, lastName, emailId, password } = req.body;
+    const { firstName, lastName, emailId, password, tags } = req.body;
 
     // Validate user input
     if (!(firstName && lastName && emailId && password))
@@ -34,13 +34,13 @@ const signupController = async (req, res) => {
       lastName: lastName,
       emailId: emailId,
       password: encryptedPassword,
-      tags: [],
+      tags: tags,
     });
 
     const userObj = await newUser.save();
 
     // Create token
-    const authToken = jwt.sign({ emailId: emailId },
+    const authToken = jwt.sign({ emailId: emailId, tags: tags },
       config.JWT_SECRET_KEY,
       { expiresIn: "2h", }
     );
