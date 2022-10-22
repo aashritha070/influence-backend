@@ -1,91 +1,159 @@
-const userDataModel = require('../models/userDataModel');
 const blogDataModel = require('../models/blogDataModel');
 
 const createBlog = async (req, res) => {
-    const newBlog = new blogDataModel(req.body);
+    const blogObj = {
+        title: req.body.title,
+        content: req.body.content,
+        coverPic: req.body.coverPic,
+        emailId: req.body.emailId,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        tags: req.body.tags,
+    }
+    const newBlog = new blogDataModel(blogObj);
     try {
-        const existBlog = await newBlog.save();
-        res.status(200).json(existBlog);
+        const blog = await newBlog.save();
+        return res
+            .status(200)
+            .json({ message: "Successfully published new blog" });
 
-    } catch (err) {
-        res.status(500).json(err)
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err })
     }
 }
 
-const updateBlog = async (req, res) => {
+const editBlogById = async (req, res) => {
     try {
-        const blog = await Blog.findById(req.params.id)
-        if (blog.username === req.body.username) {
+        const blog = await blogDataModel.findById(req.params.id)
+
+        if ((blog) && (blog.emailId === req.emailId)) {
+            const blogObj = {
+                title: req.body.title,
+                content: req.body.content,
+                coverPic: req.body.coverPic,
+                emailId: req.body.emailId,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                tags: req.body.tags,
+            }
             try {
-                const updateBlog = await Blog.findByIdAndUpdate(
+                const updateBlog = await blogDataModel.findByIdAndUpdate(
                     req.params.id,
                     {
-                        $set: req.body,
+                        $set: blogObj,
                     },
                     { new: true }
                 );
-                res.status(200).json(updateBlog);
-            } catch (err) {
-                res.status(500).json(err);
+                return res
+                    .status(200)
+                    .json({ message: "Successfully blog updated" });
             }
-        } else {
-            res.status(401).json("cannot update");
+            catch (err) {
+                return res
+                    .status(500)
+                    .json({ message: err });
+            }
         }
-    } catch (err) {
-        res.status(500).json(err);
+        else {
+            return res
+                .status(401)
+                .json({ message: "Unauthorised action" });
+        }
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err });
     }
 }
 
-const deleteBlog = async (req, res) => {
+const deleteBlogById = async (req, res) => {
     try {
-        const blog = await Blog.findById(req.params.id);
-        if (blog.username === req.body.username) {
+        const blog = await blogDataModel.findById(req.params.id);
+
+        if ((blog) && (blog.emailId === req.body.username)) {
             try {
                 await blog.delete();
-                res.status(200).json("Post has been deleted");
-            } catch (err) {
-                res.status(500).json(err);
+                return res
+                    .status(200)
+                    .json({ message: "Successfully blog deleted" });
+            }
+            catch (err) {
+                return res
+                    .status(500)
+                    .json({ messaag: err });
             }
         } else {
-            res.status(401).json("cannot delete");
+            return res
+                .status(401)
+                .json({ message: "Unauthorised action" });
         }
-    } catch (err) {
-        res.status(500).json(err);
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err });
     }
 }
 
 const fetchBlogById = async (req, res) => {
     try {
-        const blog = await Blog.findById(req.params.id);
-        res.status(200).json(blog);
-    } catch (err) {
-        res.status(500).json(err);
+        const blog = await blogDataModel.findById(req.params.id);
+        return res
+            .status(200)
+            .json({ message: "Blog meta data by blogId", data: blog });
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err });
+    }
+}
+
+const fetchBlogByAuthor = async (req, res) => {
+    try {
+        const blogs = await blogDataModel.findById({ emailId: req.data.authorEmailId }).sort({ createdAt: "desc" });
+        return res
+            .status(200)
+            .json({ message: "All blogs by author", data: blogs });
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err });
+    }
+}
+
+const fetchTopBlog = async (req, res) => {
+    try {
+        blogs = await blogDataModel.find({}, null, { limit: 10 }).sort({ createdAt: "desc" });
+        return res
+            .status(200)
+            .json({ message: "Top 10 blogs meta data", data: blogs });
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err });
     }
 }
 
 const fetchAllBlog = async (req, res) => {
-    const username = req.query.user;
-    const Tag = req.query.tag;
-
     try {
-        let blogs;
-        if (username) {
-            blogs = await Blog.find({ username }).sort({ createdAt: "desc" });
-
-        } else if (Tag) {
-            blogs = await Blog.find({
-                tags: {
-                    $in: [Tag],
-                },
-            }).sort({ createdAt: "desc" });
-        } else {
-            blogs = await Blog.find().sort({ createdAt: "desc" });
-        }
-        // console.log(blogs)
-        res.status(200).json(blogs);
-    } catch (err) {
-        res.status(500).json(err);
+        blogs = await blogDataModel.find();
+        return res
+            .status(200)
+            .json({ message: "All blogs meta data", data: blogs });
+    }
+    catch (err) {
+        return res
+            .status(300)
+            .json({ message: err });
     }
 }
 
-module.exports = { createBlog, updateBlog, deleteBlog, fetchAllBlog, fetchBlogById };
+
+module.exports = { createBlog, editBlogById, deleteBlogById, fetchTopBlog, fetchAllBlog, fetchBlogById, fetchBlogByAuthor };

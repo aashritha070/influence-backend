@@ -29,7 +29,7 @@ app.use(cors());
 
 app.use('/auth', authRoutes);
 app.use('/author', authMiddleware, authorRoutes);
-app.use('/post', authMiddleware, blogRoutes);
+app.use('/blog', authMiddleware, blogRoutes);
 app.use('/tags', authMiddleware, tagRoutes);
 
 app.listen(5000, () => {

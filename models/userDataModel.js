@@ -28,4 +28,4 @@ const UserTable = new mongoose.Schema({
     { timestamps: true }
 );
 
-module.exports = mongoose.model("userData", UserTable)
+module.exports = mongoose.model("userMetaData", UserTable, "userMetaData")

@@ -13,4 +13,4 @@ const tagsTable = new mongoose.Schema({
     { timestamps: true }
 );
 
-module.exports = mongoose.model("tagDetails", tagsTable);
+module.exports = mongoose.model("tagDetails", tagsTable, "tagDetails");

@@ -6,7 +6,7 @@ const blogTable = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    description: {
+    content: {
         type: String,
         required: true,
     },
@@ -34,4 +34,4 @@ const blogTable = new mongoose.Schema({
     { timestamps: true }
 );
 
-module.exports = mongoose.model("blogData", blogTable);
+module.exports = mongoose.model("blogsMetaData", blogTable, "blogsMetaData");
