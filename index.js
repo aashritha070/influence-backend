@@ -27,10 +27,10 @@ mongoose
 
 app.use(cors());
 
-app.use('/', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/author', authMiddleware, authorRoutes);
 app.use('/post', authMiddleware, blogRoutes);
-app.use('/tag', authMiddleware, tagRoutes);
+app.use('/tags', authMiddleware, tagRoutes);
 
 app.listen(5000, () => {
   console.log('server listening on PORT', 5000);

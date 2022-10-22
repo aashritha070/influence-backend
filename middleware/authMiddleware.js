@@ -13,7 +13,8 @@ const authenticator = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, config.JWT_SECRET_KEY);
-    req.emailId = decoded;
+    req.emailId = decoded.emailId;
+    req.tags = decoded.tags
   }
   catch (err) {
     return res
