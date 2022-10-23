@@ -1,61 +1,75 @@
 const userDataModel = require('../models/userDataModel');
-const Blog = require('../models/Blog');
+const blogDataModel = require('../models/blogDataModel');
 const bcrypt = require('bcrypt');
 
-const updateBlog = async (req, res) => {
-    if (req.body.userId === req.params.id) {
-        if (req.body.password) {
-            const salt = await bcrypt.genSalt(10);
-            req.body.password = await bcrypt.hash(req.body.password, salt);
-        }
-        try {
-            const updateChanges = await UserDetails.findByIdAndUpdate(req.params.id, {
-                $set: req.body,
-            },
-                {
-                    new: true
-                });
-            res.status(200).json(updateChanges);
-        } catch (err) {
-            res.status(500).json(err)
-        }
-
-    }
-    else {
-        res.status(401).json("cannot update");
-    }
-}
-
-const deleteBlog = async (req, res) => {
-    if (req.body.userId === req.params.id) {
-        try {
-            const user = await UserDetails.findById(req.params.id)
-
-            try {
-                await Blog.deleteMany({ username: user.username });
-                await UserDetails.findByIdAndDelete(req.params.id)
-                res.status(200).json("user removed");
-            } catch (err) {
-                res.status(500).json(err)
-            }
-
-        } catch (err) {
-            res.status(404).json("user not found")
-        }
-    }
-    else {
-        res.status(401).json("cannot delete");
-    }
-}
-
-const fetchBlog = async (req, res) => {
+const updateUserData = async (req, res) => {
     try {
-        const user = await userDataModel.findById(req.params.id);
-        const { password, ...others } = user._doc;
-        res.status(200).json(others);
-    } catch (err) {
+        const user = await userDataModel.find({ emailId: req.emailId })
+        if (user) {
+            const updateChanges = await UserDetails.findOneAndUpdate({ emailId: req.emailId }, { firstName: req.body.firstName, lastName: req.body.lastName }, { new: true })
+            return res
+                .status(200)
+                .json({ message: "Successfully account updated" });
+        }
+        else {
+            return res
+                .status(404)
+                .json({ message: "Account not found" })
+        }
+    }
+    catch (err) {
         res.status(500).json(err)
     }
+
 }
 
-module.exports = { updateBlog, deleteBlog, fetchBlog };
+const deleteUserData = async (req, res) => {
+    try {
+        const user = await userDataModel.find({ emailId: req.emailId })
+
+        if (user) {
+            await blogDataModel.deleteMany({ emailId: req.emailId });
+            await userDataModel.findByIdAndDelete(user._id)
+            return res
+                .status(200)
+                .json({ message: "Successfully account deleted" });
+        }
+        else {
+            return res
+                .status(404)
+                .json({ message: "Account not found" })
+        }
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err })
+    }
+}
+
+const updateUserPassword = async (req, res) => {
+    try {
+        const user = await userDataModel.find({ emailId: req.emailId })
+        const validate = await bcrypt.compare(req.body.password, user.password)
+
+        if (validate) {
+            const salt = await bcrypt.genSalt(10);
+            const newPassword = await bcrypt.hash(password, salt);
+            const updateChanges = await UserDetails.findOneAndUpdate({ emailId: req.emailId }, { password: newPassword }, { new: true })
+            return res
+                .status(200)
+                .json({ message: "Successfully password updated" });
+        }
+        else {
+            return res
+                .status(404)
+                .json({ message: "Enter valid credentials" })
+        }
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err })
+    }
+}
+module.exports = { updateUserData, deleteUserData, updateUserPassword };

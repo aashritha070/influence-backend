@@ -1,9 +1,10 @@
 const router = require('express').Router();
+const { updateUserData, deleteUserData, updateUserPassword } = require("../controllers/authorControllers");
 
-router.post('/edit', (req, res) => updateBlog(req, res));
+router.post('/edit', (req, res) => updateUserData(req, res));
 
-router.post('/delete', (req, res) => deleteBlog(req, res));
+router.post('/delete', (req, res) => deleteUserData(req, res));
 
-router.post('/', (req, res) => fetchBlog(req, res));
+router.post('/password', (req, res) => updateUserPassword(req, res));
 
 module.exports = router;

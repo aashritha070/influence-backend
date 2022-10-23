@@ -9,9 +9,9 @@ router.post("/delete", (req, res) => deleteBlogById(req, res)); // delete blog
 
 router.post("/id", (req, res) => fetchBlogById(req, res)); // fetch blog by id
 
-router.post("/tag", (req, res) => fetchBlogByTags(req, res)); // fetch all blog
+router.post("/tag", (req, res) => fetchBlogByTags(req, res)); // fetch blog by tag 
 
-router.post("/author", (req, res) => fetchBlogByAuthor(req, res)); // fetch all blog
+router.post("/author", (req, res) => fetchBlogByAuthor(req, res)); // fetch blog by author
 
 router.post("/", (req, res) => fetchTopBlog(req, res)); // fetch top blog
 
