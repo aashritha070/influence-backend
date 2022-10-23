@@ -6,7 +6,7 @@ const updateUserData = async (req, res) => {
     try {
         const user = await userDataModel.find({ emailId: req.emailId })
         if (user) {
-            const updateChanges = await UserDetails.findOneAndUpdate({ emailId: req.emailId }, { firstName: req.body.firstName, lastName: req.body.lastName }, { new: true })
+            const updateChanges = await userDataModel.findOneAndUpdate({ emailId: req.emailId }, { firstName: req.body.firstName, lastName: req.body.lastName }, { new: true })
             return res
                 .status(200)
                 .json({ message: "Successfully account updated" });
