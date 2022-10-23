@@ -29,7 +29,7 @@ const deleteUserData = async (req, res) => {
 
         if (user) {
             await blogDataModel.deleteMany({ emailId: req.emailId });
-            await userDataModel.findByIdAndDelete(user._id)
+            await userDataModel.deleteOne({ emailId: req.emailId })
             return res
                 .status(200)
                 .json({ message: "Successfully account deleted" });
