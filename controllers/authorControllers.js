@@ -72,4 +72,26 @@ const updateUserPassword = async (req, res) => {
             .json({ message: err })
     }
 }
-module.exports = { updateUserData, deleteUserData, updateUserPassword };
+
+const fetchUserData = async (req, res) => {
+    try {
+        const user = await userDataModel.findOne({ emailId: req.emailId })
+
+        if (user) {
+            return res
+                .status(200)
+                .json({ data: { firstName: user.firstName, lastName: user.lastName, emailId: user.emailId } })
+        }
+        else {
+            return res
+                .status(404)
+                .json({ message: "Account not found" })
+        }
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err })
+    }
+}
+module.exports = { updateUserData, deleteUserData, updateUserPassword, fetchUserData };
