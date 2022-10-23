@@ -55,7 +55,7 @@ const updateUserPassword = async (req, res) => {
         if (validate) {
             const salt = await bcrypt.genSalt(10);
             const newPassword = await bcrypt.hash(req.body.newPassword, salt);
-            const updateChanges = await UserDetails.findOneAndUpdate({ emailId: req.emailId }, { password: newPassword }, { new: true })
+            const updateChanges = await userDataModel.findOneAndUpdate({ emailId: req.emailId }, { password: newPassword }, { new: true })
             return res
                 .status(200)
                 .json({ message: "Successfully password updated" });
