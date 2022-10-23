@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const updateUserData = async (req, res) => {
     try {
-        const user = await userDataModel.findOne({ emailId: req.emailId })
+        const user = await userDataModel.find({ emailId: req.emailId })
         if (user) {
             const updateChanges = await userDataModel.findOneAndUpdate({ emailId: req.emailId }, { firstName: req.body.firstName, lastName: req.body.lastName }, { new: true })
             return res
@@ -49,7 +49,7 @@ const deleteUserData = async (req, res) => {
 
 const updateUserPassword = async (req, res) => {
     try {
-        const user = await userDataModel.find({ emailId: req.emailId })
+        const user = await userDataModel.findOne({ emailId: req.emailId })
         const validate = await bcrypt.compare(req.body.oldPassword, user.password)
 
         if (validate) {
