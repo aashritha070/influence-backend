@@ -7,6 +7,6 @@ router.post('/delete', (req, res) => deleteUserData(req, res));
 
 router.post('/password', (req, res) => updateUserPassword(req, res));
 
-router.post('/', (req, res) => fetchUserData(req, res));
+router.post('/fetch', (req, res) => fetchUserData(req, res));
 
 module.exports = router;
