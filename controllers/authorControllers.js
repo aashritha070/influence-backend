@@ -50,11 +50,11 @@ const deleteUserData = async (req, res) => {
 const updateUserPassword = async (req, res) => {
     try {
         const user = await userDataModel.find({ emailId: req.emailId })
-        const validate = await bcrypt.compare(req.body.password, user.password)
+        const validate = await bcrypt.compare(req.body.oldPassword, user.password)
 
         if (validate) {
             const salt = await bcrypt.genSalt(10);
-            const newPassword = await bcrypt.hash(password, salt);
+            const newPassword = await bcrypt.hash(req.body.newPassword, salt);
             const updateChanges = await UserDetails.findOneAndUpdate({ emailId: req.emailId }, { password: newPassword }, { new: true })
             return res
                 .status(200)
