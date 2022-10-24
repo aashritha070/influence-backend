@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { createBlog, editBlogById, deleteBlogById, fetchTopBlog, fetchAllBlog, fetchBlogById, fetchBlogByAuthor, fetchBlogByTags } = require('../controllers/blogControllers');
+const { createBlog, editBlogById, fetchBlogBySelectedTags, deleteBlogById, fetchTopBlog, fetchAllBlog, fetchBlogById, fetchBlogByAuthor, fetchBlogByTags } = require('../controllers/blogControllers');
 const multer = require("multer");
 const imageDataModel = require('../models/imageDataModel');
 
@@ -23,6 +23,8 @@ router.post("/delete", (req, res) => deleteBlogById(req, res)); // delete blog
 router.post("/id", (req, res) => fetchBlogById(req, res)); // fetch blog by id
 
 router.post("/tag", (req, res) => fetchBlogByTags(req, res)); // fetch blog by tag 
+
+router.post("/selectedtag", (req, res) => fetchBlogBySelectedTags(req, res)); // fetch blog by tag 
 
 router.post("/author", (req, res) => fetchBlogByAuthor(req, res)); // fetch blog by author
 

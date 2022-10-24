@@ -15,6 +15,8 @@ const authenticator = (req, res, next) => {
     const decoded = jwt.verify(token, config.JWT_SECRET_KEY);
     req.emailId = decoded.emailId;
     req.tags = decoded.tags
+    req.firstName = decoded.firstName
+    req.lastName = decoded.lastName
   }
   catch (err) {
     return res

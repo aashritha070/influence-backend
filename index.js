@@ -16,6 +16,9 @@ const authMiddleware = require("./middleware/authMiddleware")
 
 dotenv.config();
 
+
+const config = process.env;
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -40,6 +43,6 @@ app.use('/author', authMiddleware, authorRoutes);
 app.use('/blog', authMiddleware, blogRoutes);
 app.use('/tags', authMiddleware, tagRoutes);
 
-app.listen(5000, () => {
-  console.log('server listening on PORT', 5000);
+app.listen(config.PORT, () => {
+  console.log('server listening on PORT', config.PORT);
 });

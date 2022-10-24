@@ -119,10 +119,25 @@ const fetchBlogById = async (req, res) => {
 
 const fetchBlogByAuthor = async (req, res) => {
     try {
-        const blogs = await blogDataModel.find({ emailId: req.data.authorEmailId }).sort({ createdAt: "desc" });
+        const blogs = await blogDataModel.find({ emailId: req.body.authorEmailId }).sort({ createdAt: "desc" });
         return res
             .status(200)
             .json({ message: "All blogs by author", data: blogs });
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ message: err });
+    }
+}
+
+const fetchBlogBySelectedTags = async (req, res) => {
+    try {
+        let tagsFilter = [req.body.tag]
+        const blogs = await blogDataModel.find({ tags: { $in: tagsFilter } }).sort({ createdAt: "desc" });
+        return res
+            .status(200)
+            .json({ message: "All blogs by tags", data: blogs });
     }
     catch (err) {
         return res
@@ -175,6 +190,6 @@ const fetchAllBlog = async (req, res) => {
 }
 
 const updateCoverPic = async (req, res) => {
-    
+
 }
-module.exports = { createBlog, updateCoverPic, editBlogById, deleteBlogById, fetchTopBlog, fetchAllBlog, fetchBlogById, fetchBlogByAuthor, fetchBlogByTags };
+module.exports = { createBlog, updateCoverPic, editBlogById, deleteBlogById, fetchTopBlog, fetchBlogBySelectedTags, fetchAllBlog, fetchBlogById, fetchBlogByAuthor, fetchBlogByTags };
