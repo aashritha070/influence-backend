@@ -1,4 +1,8 @@
 const blogDataModel = require('../models/blogDataModel');
+const imageDataModel = require('../models/imageDataModel');
+const fs = require("fs");
+const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink)
 
 const createBlog = async (req, res) => {
     const blogObj = {
@@ -170,5 +174,25 @@ const fetchAllBlog = async (req, res) => {
     }
 }
 
-
-module.exports = { createBlog, editBlogById, deleteBlogById, fetchTopBlog, fetchAllBlog, fetchBlogById, fetchBlogByAuthor, fetchBlogByTags };
+const updateCoverPic = async (req, res) => {
+    console.log("updateCoverPic", req)
+    return res.status(200).send("success")
+    // var img = fs.readFileSync(req.file.name);
+    // var encode_img = img.toString('base64');
+    // var final_img = {
+    //     contentType: req.file.type,
+    //     image: new Buffer(encode_img, 'base64')
+    // };
+    // imageDataModel.create(final_img, function (err, result) {
+    //     if (err) {
+    //         console.log(err);
+    //     } else {
+    //         console.log(result.img.Buffer);
+    //         console.log("Saved To database");
+    //         res.contentType(final_img.contentType);
+    //         res.send(final_img.image);
+    //     }
+    // })
+    // await unlinkAsync(req.file.path)
+}
+module.exports = { createBlog, updateCoverPic, editBlogById, deleteBlogById, fetchTopBlog, fetchAllBlog, fetchBlogById, fetchBlogByAuthor, fetchBlogByTags };

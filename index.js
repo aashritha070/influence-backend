@@ -1,6 +1,7 @@
 let express = require('express');
 let app = express();
 const cors = require('cors')
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
@@ -16,6 +17,9 @@ const authMiddleware = require("./middleware/authMiddleware")
 dotenv.config();
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.set("view engine", "ejs");
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -25,7 +29,11 @@ mongoose
   .then(console.log('connnected to Mongo'))
   .catch((err) => console.log(err));
 
+
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.set("view engine", "ejs");
 
 app.use('/auth', authRoutes);
 app.use('/author', authMiddleware, authorRoutes);
