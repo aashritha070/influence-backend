@@ -53,4 +53,5 @@ const updateCoverPic = async (req, res) => {
     const image = await newImage.save();
     return res.status(200).json({ message: "Cover image uploaded", data: image })
 }
+
 module.exports = router;

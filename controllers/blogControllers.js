@@ -9,9 +9,9 @@ const createBlog = async (req, res) => {
         title: req.body.title,
         content: req.body.content,
         coverPic: req.body.coverPic,
-        emailId: req.body.emailId,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
+        emailId: req.emailId,
+        firstName: req.firstName,
+        lastName: req.lastName,
         tags: req.body.tags,
     }
     const newBlog = new blogDataModel(blogObj);

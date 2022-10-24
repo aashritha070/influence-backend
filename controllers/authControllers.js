@@ -40,7 +40,7 @@ const signupController = async (req, res) => {
     const userObj = await newUser.save();
 
     // Create token
-    const authToken = jwt.sign({ emailId: emailId, tags: tags },
+    const authToken = jwt.sign({ emailId: emailId, tags: tags, firstName: firstName, lastName: lastName },
       config.JWT_SECRET_KEY,
       { expiresIn: "2h", }
     );
@@ -85,7 +85,7 @@ const loginController = async (req, res) => {
 
     if (user && validate) {
       // Create token
-      const authToken = jwt.sign({ emailId: emailId, tags: user.tags },
+      const authToken = jwt.sign({ emailId: emailId, tags: user.tags, firstName: user.firstName, lastName: user.lastName },
         config.JWT_SECRET_KEY,
         { expiresIn: "2h", }
       );
