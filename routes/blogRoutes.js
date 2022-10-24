@@ -1,17 +1,18 @@
 const router = require('express').Router();
-const { createBlog, updateCoverPic, editBlogById, deleteBlogById, fetchTopBlog, fetchAllBlog, fetchBlogById, fetchBlogByAuthor, fetchBlogByTags } = require('../controllers/blogControllers');
+const { createBlog, editBlogById, deleteBlogById, fetchTopBlog, fetchAllBlog, fetchBlogById, fetchBlogByAuthor, fetchBlogByTags } = require('../controllers/blogControllers');
 const multer = require("multer");
+const imageDataModel = require('../models/imageDataModel');
 
-// const storage = multer.diskStorage({
-//     destination: function (req, cb) {
-//         cb(null, '../tmp/coverPic')
-//     },
-//     filename: function (req, cb) {
-//         cb(null, req.file.name + '-' + Date.now())
-//     }
-// })
+const storage = multer.diskStorage({
+    destination: 'tmp/coverPic',
+    filename: (req, file, cb) => {
+        cb(null, file.originalname)
+    },
+});
 
-const upload = multer({ "dest": "../tmp/coverPic" }).single('file')
+const upload = multer({
+    storage: storage
+}).single('coverPic')
 
 router.post('/create', (req, res) => createBlog(req, res)); //create blog
 
@@ -29,16 +30,27 @@ router.post("/", (req, res) => fetchTopBlog(req, res)); // fetch top blog
 
 router.post("/all", (req, res) => fetchAllBlog(req, res)); // fetch all blog
 
-router.post("/upload", function (req, res) {
-    upload(req, res, function (err) {
-        if (err instanceof multer.MulterError) {
-            console.log("/upload", err)
-        } else if (err) {
-            console.log("/upload", err)
+router.post("/upload", (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            console.log(err)
         }
-        console.log(req)
-        return res.status(200).send("Success")
+        else {
+            updateCoverPic(req, res)
+        }
     })
-})
+});
 
+const updateCoverPic = async (req, res) => {
+    // const emailId = authenticator(req, res)
+    const newImage = new imageDataModel({
+        emailId: req.emailId,
+        img: {
+            data: req.file.filename,
+            contentType: req.file.mimetype
+        }
+    })
+    const image = await newImage.save();
+    return res.status(200).json({ message: "Cover image uploaded", data: image })
+}
 module.exports = router;
