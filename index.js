@@ -1,8 +1,8 @@
 let express = require('express');
 let app = express();
-const multer = require("multer");
-const path = require("path");
-const cors = require('cors')
+const multer = require('multer');
+const path = require('path');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authorization = require('./routes/authorization');
@@ -13,47 +13,44 @@ const tag = require('./routes/Tags.js');
 dotenv.config();
 
 app.use(express.json());
-app.use("/coverPic", express.static(path.join(__dirname, "/coverPic")));
+app.use('/coverPic', express.static(path.join(__dirname, '/coverPic')));
 
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    
   })
   .then(console.log('connnected to Mongo'))
   .catch((err) => console.log(err));
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb)=> {
-    cb(null, "coverPic");
+  destination: (req, file, cb) => {
+    cb(null, 'coverPic');
   },
-  filename:  (req, file, cb) =>{
-    cb(null, req.body.name)
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
   },
-})
-var upload = multer({ storage: storage })
-app.post("/insert", upload.single("file"), (req, res) => {
-  res.status(200).json("File has been uploaded successfuly");
 });
-
+var upload = multer({ storage: storage });
+app.post('/insert', upload.single('file'), (req, res) => {
+  res.status(200).json('File has been uploaded successfuly');
+});
 
 app.use(cors());
-
-
-app.get('/', (req, res) => {
-  try {
-    res.status(200).json({ message: 'Home Server' });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
 
 app.use('/authorization', authorization);
 app.use('/ExistingUser', existingUser);
 app.use('/posts', Blog);
 app.use('/Tag', tag);
 
-app.listen(process.env.PORT || 5000,function () {
+if (process.env.NODE_ENV === 'PRODUCTION') {
+  const root = require('path').join(__dirname, 'client', 'build');
+  app.use('/influence-fronted/', express.static(root));
+  app.get('*', (req, res) => {
+    res.sendFile('index.html', { root });
+  });
+}
+
+app.listen(process.env.PORT || 5000, function () {
   console.log('server listening on PORT', this.address().port);
 });
